@@ -1,0 +1,28 @@
+- name: Deploy pipeline for MusicView-Server
+  hosts: localhost
+  connection: local
+
+  tasks:
+    - name: Delete old repo
+      ansible.builtin.shell: rm -rf ../MusicView-Server
+
+    - name: Clone git repo -> MusicView-Server
+      ansible.builtin.git:
+        repo: git@github.com:Jazzcort/MusicView-Server.git
+        dest: ../MusicView-Server
+        key_file: ~/.ssh/tao
+
+    - name: Copy .env
+      ansible.builtin.shell: |
+        cd ../MusicView-Server && \
+        cp ../env/actix-mongo.env ./.env
+
+    - name: Build and deploy MusicView-Server
+      ansible.builtin.shell: |
+        cd ../MusicView-Server && \
+        ./deploy.sh
+      register: deploy_result
+
+    - name: Display script output
+      ansible.builtin.debug:
+        msg: "{{ deploy_result.stdout }}"

@@ -1,0 +1,7 @@
+.DS_Store
+*.pem
+MusicView-Server/
+Portfolio-Web/
+actix-static-httpserver/
+env/
+commands.txt

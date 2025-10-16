@@ -1,0 +1,23 @@
+- name: Echo
+  hosts: webservers
+  become: yes
+  gather_facts: false
+
+  tasks:
+    - name: Ping the remote server to check connection
+      ansible.builtin.ping:
+
+- name: Renew certificate
+  hosts: webservers
+  become: yes
+  gather_facts: false
+
+  tasks:
+    - name: Run the script to renew certificate on the remote server
+      ansible.builtin.script: ../scripts/remote/renew-certificate.sh
+      register: renew_result
+
+    - name: Display script output
+      ansible.builtin.debug:
+        msg: "{{ renew_result.stdout }}"
+    

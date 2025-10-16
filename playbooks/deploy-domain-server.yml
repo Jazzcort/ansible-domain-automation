@@ -1,0 +1,24 @@
+- name: Deploy pipeline for domain server
+  hosts: localhost
+  connection: local
+
+  tasks:
+    - name: Delete old repo
+      ansible.builtin.shell: |
+        rm -rf ../actix-static-httpserver
+
+    - name: Clone git repo -> actix-static-httpserver
+      ansible.builtin.git:
+        repo: git@github.com:Jazzcort/actix-static-httpserver.git
+        dest: ../actix-static-httpserver
+        key_file: ~/.ssh/tao
+
+    - name: Build and deploy domain server
+      ansible.builtin.shell: |
+        cd ../actix-static-httpserver && \
+        ./deploy.sh
+      register: deploy_result
+
+    - name: Display script output
+      ansible.builtin.debug:
+        msg: "{{ deploy_result.stdout }}"
