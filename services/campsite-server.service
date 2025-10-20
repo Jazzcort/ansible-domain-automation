@@ -1,0 +1,15 @@
+[Unit]
+Description=Campsite Server
+After=network.target
+StartLimitIntervalSec=0
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+RuntimeMaxSec=30d
+User=root
+WorkingDirectory=/home/ec2-user/campsite-server
+ExecStart=/usr/bin/node /home/ec2-user/campsite-server/app.js
+
+[Install]
+WantedBy=multi-user.target

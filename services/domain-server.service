@@ -1,0 +1,15 @@
+[Unit]
+Description=Domain Server
+After=network.target
+StartLimitIntervalSec=0
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+RuntimeMaxSec=30d
+User=root
+WorkingDirectory=/home/ec2-user/domain-server
+ExecStart=/home/ec2-user/domain-server/actix-static-httpserver
+
+[Install]
+WantedBy=multi-user.target

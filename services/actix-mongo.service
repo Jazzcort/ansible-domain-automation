@@ -1,0 +1,15 @@
+[Unit]
+Description=Actix Mongo
+After=network.target
+StartLimitIntervalSec=0
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+RuntimeMaxSec=30d
+User=root
+WorkingDirectory=/home/ec2-user/actix-mongo-server
+ExecStart=/home/ec2-user/actix-mongo-server/actix-mongo
+
+[Install]
+WantedBy=multi-user.target
