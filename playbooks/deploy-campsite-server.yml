@@ -36,6 +36,7 @@
 - name: Server -> Update and restart CampSite server
   hosts: webservers
   become: yes
+  gather_facts: false
 
   tasks:
     - name: Stop service for updating
