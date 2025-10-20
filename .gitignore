@@ -3,5 +3,6 @@
 MusicView-Server/
 Portfolio-Web/
 actix-static-httpserver/
+campsite-server/
 env/
 commands.txt

@@ -1,0 +1,53 @@
+- name: Deploy pipeline for campsite server
+  hosts: localhost
+  connection: local
+  vars:
+    key_file_path: "../jazzcort.pem"
+    ec2_instance: "ec2-user@ec2-54-196-149-224.compute-1.amazonaws.com"
+
+  tasks:
+    - name: Delete old repo
+      ansible.builtin.shell: |
+        rm -rf ../campsite-server
+
+    - name: Clone git repo -> CampSite
+      ansible.builtin.git:
+        repo: git@github.com:Jazzcort/CampSite.git
+        dest: ../campsite-server
+        key_file: ~/.ssh/tao
+
+    - name: Npm install
+      ansible.builtin.shell: |
+        cd ../campsite-server && \
+        npm install
+
+    - name: Copy env file
+      ansible.builtin.shell: |
+        cp ../env/campsite-server.env ../campsite-server/.env
+
+    - name: Compress and upload the package
+      ansible.builtin.shell: |
+        rm ../campsite.zip && \
+        zip -r ../campsite.zip ../campsite-server && \
+        scp -i {{ key_file_path }} ../campsite.zip {{ ec2_instance }}:. && \
+        rm ../campsite.zip 
+
+
+- name: Server -> Update and restart CampSite server
+  hosts: webservers
+  become: yes
+
+  tasks:
+    - name: Stop service for updating
+      ansible.builtin.shell: |
+        systemctl stop campsite-server.service
+    
+    - name: Decompress the package
+      ansible.builtin.shell: |
+        unzip -o -q ./campsite.zip -d . && \
+        rm ./campsite.zip
+
+    - name: Start service
+      ansible.builtin.shell: |
+        systemctl start campsite-server.service
+
